@@ -24,61 +24,61 @@ import cardoso.ilanna.galeria.model.MyItem;
 public class NewItemActivity extends AppCompatActivity {
     static int PHOTO_PICKER_REQUEST = 1;
     static int NEW_ITEM_REQUEST = 1;
-    List<MyItem> itens = new ArrayList<>();
-    Uri photoSelected = null;
+    List<MyItem> itens = new ArrayList<>(); //lista
+    Uri photoSelected = null; //endereço da foto
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
-        ImageButton imgCI = findViewById(R.id.imbCI);
-        imgCI.setOnClickListener(new View.OnClickListener() {
+        ImageButton imgCI = findViewById(R.id.imbCI); //Capturando a img
+        imgCI.setOnClickListener(new View.OnClickListener() { //setando o ouvidor de clicks
             @Override
             public void onClick(View view) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, PHOTO_PICKER_REQUEST);
+                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT); //abrindo a galeria com um intent
+                photoPickerIntent.setType("image/*"); //inserindo na intent que o unico tipo de arquivo é imagem
+                startActivityForResult(photoPickerIntent, PHOTO_PICKER_REQUEST); //iniciando a activity com a imagem que foi selecionada
             }
         });
-       Button btnAddItem = findViewById(R.id.btnAddItem);
+       Button btnAddItem = findViewById(R.id.btnAddItem); //obtendo o botão
        btnAddItem.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               if (photoSelected == null) {
+               if (photoSelected == null) { //se não tiver selecionado a foto, então aparecerá a mensagem
                    Toast.makeText(NewItemActivity.this, "É necessário selecionar uma imagem!", Toast.LENGTH_LONG).show();
                    return;
                }
-               EditText etTitle = findViewById(R.id.etTitle);
-               String title = etTitle.getText().toString();
-               if (title.isEmpty()) {
+               EditText etTitle = findViewById(R.id.etTitle); //obtendo o titulo
+               String title = etTitle.getText().toString(); //transformando o text em string
+               if (title.isEmpty()) { //se não tiver um titulo, então aparecerá a mensagem
                    Toast.makeText(NewItemActivity.this, "É necessário inserir um título", Toast.LENGTH_LONG).show();
                    return;
                }
 
-               EditText etDesc = findViewById(R.id.etDesc);
-               String description = etDesc.getText().toString();
-               if (description.isEmpty()) {
+               EditText etDesc = findViewById(R.id.etDesc);//obtendo a descrição
+               String description = etDesc.getText().toString(); //transformando a descrição em string
+               if (description.isEmpty()) { //se não tiver descrição, então aparecerá a mensagem
                    Toast.makeText(NewItemActivity.this, "É necessário inserir uma descrição", Toast.LENGTH_LONG).show();
                    return;
                }
 
-               Intent i = new Intent();
-               i.setData(photoSelected);
-               i.putExtra("title", title);
-               i.putExtra("description", description);
-               setResult(Activity.RESULT_OK, i);
-               finish();
+               Intent i = new Intent(); //Criando uma intenção para armazenar os dados
+               i.setData(photoSelected); //armazenando a uri
+               i.putExtra("title", title); //armazenando o titulo
+               i.putExtra("description", description); //armazenando a descrição
+               setResult(Activity.RESULT_OK, i); //indica o resultado da activity
+               finish(); //fim
            }
        });
     }
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { //requestCode = resposta da StartActivityForResult  resultCode = resultado da activity data = dados da activity recebida
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PHOTO_PICKER_REQUEST) {
-            if(resultCode == Activity.RESULT_OK) {
-                photoSelected = data.getData();
-                ImageView imvfotoPreview = findViewById(R.id.imvPhotoPreview);
-                imvfotoPreview.setImageURI(photoSelected);
+        if (requestCode == PHOTO_PICKER_REQUEST) { //vemos se request code é igual a interface 1
+            if(resultCode == Activity.RESULT_OK) { //verificando a resposta do result code, se estiver ok então...
+                photoSelected = data.getData(); //colocando os dados no photoSelected
+                ImageView imvfotoPreview = findViewById(R.id.imvPhotoPreview); //obtendo a imv
+                imvfotoPreview.setImageURI(photoSelected); //setando essa img no URI
 
             }
             if (requestCode == NEW_ITEM_REQUEST) {

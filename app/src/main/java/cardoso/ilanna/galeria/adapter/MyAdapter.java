@@ -25,22 +25,26 @@ public class MyAdapter extends RecyclerView.Adapter {
     }
 
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mainActivity);
-        View v = inflater.inflate(R.layout.item_list, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(mainActivity); //inflador de layouts
+        View v = inflater.inflate(R.layout.item_list, parent, false); //criando os itens de interface e guardando no v
         return new MyViewHolder(v);
     }
 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyItem myItem = itens.get(position);
-        View v = holder.itemView;
+        View v = holder.itemView; //guarda os itens que estão na classe Holder
 
         ImageView imvfoto = v.findViewById(R.id.imvFoto);
-        imvfoto.setImageURI(myItem.foto);
+        imvfoto.setImageURI(myItem.photo);
 
         TextView tvTitle = v.findViewById(R.id.tvTitle);
         tvTitle.setText(myItem.title);
 
         TextView tvdesc = v.findViewById(R.id.tvDesc);
         tvdesc.setText(myItem.description);
+    }
+
+    public int getItemCount() {
+        return itens.size();
     }
 }
