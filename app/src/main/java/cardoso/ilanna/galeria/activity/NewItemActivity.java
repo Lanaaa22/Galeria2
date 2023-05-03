@@ -2,6 +2,7 @@ package cardoso.ilanna.galeria.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,19 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cardoso.ilanna.galeria.R;
+import cardoso.ilanna.galeria.model.MainActivityViewModel;
 import cardoso.ilanna.galeria.model.MyItem;
+import cardoso.ilanna.galeria.model.NewItemActivityModel;
 
 public class NewItemActivity extends AppCompatActivity {
     static int PHOTO_PICKER_REQUEST = 1;
     static int NEW_ITEM_REQUEST = 1;
-    List<MyItem> itens = new ArrayList<>(); //lista
-    Uri photoSelected = null; //endereço da foto
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
+        NewItemActivityModel vm = new ViewModelProvider(this).get(NewItemActivityModel.class);
+
+        Uri selectPhotoLocation = vm.getSelectedPhotoLocation();
+        if(selectPhotoLocation != null) {
+            ImageView imvfotoPreview = findViewById(R.id.imvPhotoPreview);
+            imvfotoPreview.setImageURI(selectPhotoLocation);
+        }
         ImageButton imgCI = findViewById(R.id.imbCI); //Capturando a img
         imgCI.setOnClickListener(new View.OnClickListener() { //setando o ouvidor de clicks
             @Override
@@ -45,6 +54,7 @@ public class NewItemActivity extends AppCompatActivity {
        btnAddItem.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Uri photoSelected = vm.getSelectedPhotoLocation();
                if (photoSelected == null) { //se não tiver selecionado a foto, então aparecerá a mensagem
                    Toast.makeText(NewItemActivity.this, "É necessário selecionar uma imagem!", Toast.LENGTH_LONG).show();
                    return;
@@ -76,20 +86,15 @@ public class NewItemActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PHOTO_PICKER_REQUEST) { //vemos se request code é igual a interface 1
             if(resultCode == Activity.RESULT_OK) { //verificando a resposta do result code, se estiver ok então...
-                photoSelected = data.getData(); //colocando os dados no photoSelected
-                ImageView imvfotoPreview = findViewById(R.id.imvPhotoPreview); //obtendo a imv
-                imvfotoPreview.setImageURI(photoSelected); //setando essa img no URI
+                Uri photoSelected = data.getData(); //colocando os dados no photoSelected
+                ImageView imvfotoPreview = findViewById(R.id.imvPhotoPreview);
+                imvfotoPreview.setImageURI(photoSelected);
 
+               NewItemActivityModel vm = new ViewModelProvider( this ).get(NewItemActivityModel.class);
+               vm.setSelectedPhotoLocation(photoSelected);
             }
-            if (requestCode == NEW_ITEM_REQUEST) {
-                if (requestCode == Activity.RESULT_OK) {
-                    MyItem myItem = new MyItem();
-                    myItem.title = data.getStringExtra("title");
-                    myItem.description = data.getStringExtra("description");
-                    myItem.photo = data.getData();
-                    itens.add(myItem);
-                }
-            }
+
+
         }
 
 

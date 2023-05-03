@@ -28,7 +28,6 @@ import cardoso.ilanna.galeria.model.Util;
 
 public class MainActivity extends AppCompatActivity {
     static int NEW_ITEM_REQUEST = 1; //váriavel inicial 1 para encaminhar a interface para a interface 1
-    List<MyItem> itens = new ArrayList<>(); //instanciando uma lista
     MyAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         RecyclerView rvItens = findViewById(R.id.rvItens); //obtendo o recycle
+        MainActivityViewModel vm = new ViewModelProvider( this ).get(MainActivityViewModel.class);
+        List<MyItem> itens = vm.getItens();
+
         myAdapter = new MyAdapter(this, itens); //instanciando e criando o MyAdapter
         rvItens.setAdapter(myAdapter); //colocando ele no recycle
 
@@ -73,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 } catch (FileNotFoundException e) { //exceção caso a imagem não seja encontrada
                     e.printStackTrace();
                 }
-                MainActivityViewModel vm = new ViewModelProvider( this ).get(MainActivityViewModel.class);
-                List<MyItem> itens = vm.getItens();
+                MainActivityViewModel vm = new ViewModelProvider( this ).get(MainActivityViewModel.class); //obtendo o viewModel
+                List<MyItem> itens = vm.getItens(); //lista que está no View Model
 
-                itens.add(myItem);
+                itens.add(myItem); //guardando na lista
                 myAdapter.notifyItemInserted(itens.size()-1);
 
             }
